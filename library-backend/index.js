@@ -116,8 +116,21 @@ const typeDefs = `
   type Query {
     bookCount: Int
     authorCount: Int
-    allBooks(author: String): [Book]
+    allBooks(author: String, genres: [String]): [Book]
     allAuthors: [Author]
+  }
+
+  type Mutation {
+    addBook(
+      title: String!
+      author: String!
+      published: Int!
+      genres: [String!]!
+    ): Book
+    editAuthor(
+      name: String!
+      setBornTo: Int!
+    ): Author
   }
 `
 
@@ -125,11 +138,18 @@ const resolvers = {
   Query: {
     bookCount: () => books.length,
     authorCount: () => authors.length,
-    allBooks: (root, { author }) => {
-      if (author) {
-        return books.filter(book => book.author === author)
+    allBooks: (root, args) => {
+      let filteredBooks = books
+
+      if (args.author) {
+        filteredBooks = filteredBooks.filter(book => book.author === args.author)
       }
-      return books
+
+      if (args.genres) {
+        filteredBooks = filteredBooks.filter(book => book.genres.some(genre => args.genres.includes(genre)))
+      }
+
+      return filteredBooks
     },
     allAuthors: () => authors
 
@@ -142,6 +162,26 @@ const resolvers = {
   Author: {
     bookCount: (root) => {
       return books.filter(book => book.author === root.name).length
+    }
+  },
+  Mutation: {
+    addBook: (root, args) => {
+      const newBook = { ...args, id: `${Math.random()}` }
+      books.push(newBook)
+
+      if (!authors.find(author => author.name === args.author)) {
+        const newAuthor = { name: args.author, id: `${Math.random()}` }
+        authors.push(newAuthor)
+      }
+      return newBook
+    },
+    editAuthor: (root, args) => {
+      const author = authors.find(author => author.name === args.name)
+      if (!author) {
+        return null
+      }
+      author.born = args.setBornTo
+      return author
     }
   }
 }
