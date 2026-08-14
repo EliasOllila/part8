@@ -12,7 +12,7 @@ export const ALL_AUTHORS = gql`
 `
 
 export const ME = gql`
-  query {
+  query me {
     me {
       username
       favoriteGenre

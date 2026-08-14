@@ -1,12 +1,13 @@
 import { useState } from 'react'
 import { useMutation } from '@apollo/client/react'
-import { LOGIN } from '../queries'
+import { LOGIN, ME, ALL_BOOKS, ALL_AUTHORS } from '../queries'
 
 const LoginForm = ({ show, setError, setToken, setPage }) => {
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
 
   const [ login ] = useMutation(LOGIN, {
+    refetchQueries: [{ query: ME }, { query: ALL_BOOKS }, { query: ALL_AUTHORS }, 'me', 'allBooks', 'allAuthors'],
     onCompleted: (data) => {
       const token = data.login.value
       setToken(token)
