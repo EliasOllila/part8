@@ -18,7 +18,7 @@ const LoginForm = ({ show, setError, setToken, setPage }) => {
       }
     },
     onError: (error) => {
-      setError(error.message)
+      setError(`Login failed: ${error.graphQLErrors?.[0]?.message || error.message}`)
     }
   })
 
@@ -36,17 +36,23 @@ const LoginForm = ({ show, setError, setToken, setPage }) => {
       <h2>Login</h2>
       <form onSubmit={submit}>
         <div>
-          username <input
-            value={username}
-            onChange={({ target }) => setUsername(target.value)}
-          />
+          <label>
+            username
+            <input
+              value={username}
+              onChange={({ target }) => setUsername(target.value)}
+            />
+          </label>
         </div>
         <div>
-          password <input
-            type='password'
-            value={password}
-            onChange={({ target }) => setPassword(target.value)}
-          />
+          <label>
+            password
+            <input
+              type='password'
+              value={password}
+              onChange={({ target }) => setPassword(target.value)}
+            />
+          </label>
         </div>
         <button type='submit'>login</button>
       </form>
