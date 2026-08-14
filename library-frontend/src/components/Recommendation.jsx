@@ -3,13 +3,16 @@ import { ALL_BOOKS, ME } from '../queries'
 
 const Recommendation = ({show}) => {
 
-    const meResult = useQuery(ME)
+    const meResult = useQuery(ME, {
+        fetchPolicy: 'cache-and-network',
+    })
 
     const userFavoriteGenre = meResult.data?.me?.favoriteGenre
 
     const booksResult = useQuery(ALL_BOOKS, {
         variables: { genre: userFavoriteGenre },
-        skip: !userFavoriteGenre
+        skip: !userFavoriteGenre,
+        fetchPolicy: 'cache-and-network',
     })
 
     if (!show) {
