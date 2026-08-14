@@ -23,6 +23,12 @@ const resolvers = {
     }
   },
   
+  Author: {
+    bookCount: async (root) => {
+      return Book.countDocuments({ author: root._id })
+    }
+  },
+
   Book: {
     author: async (root) => {
       return Author.findById(root.author)
