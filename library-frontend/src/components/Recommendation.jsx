@@ -15,7 +15,6 @@ const Recommendation = ({show}) => {
     if (!show) {
         return null
     }
-
     const books = booksResult.data?.allBooks || []
 
     return (
